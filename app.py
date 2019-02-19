@@ -29,8 +29,7 @@ def hello():
 def deleteMeeting(id):
     try:
         #Get meeting then delete
-        meeting = Meeting.query().filter_by(id=id).first()
-        db.session.delete(meeting)
+        Meeting.query.filter_by(id=id).delete()
         db.session.commit()
         return "Meeting Deleted"
     except Exception as e:
@@ -39,45 +38,50 @@ def deleteMeeting(id):
 @app.route('/meetings/<id>', methods=['PUT'])
 def updateMeeting(id):
 
-    date = request.args.get('date')
-    meeting_time = request.args.get('meeting_time')
-    attended = request.args.get('attended')
-    topics = request.args.get('topics')
-    todo = request.args.get('todo')
-    completed = request.args.get('completed')
+    data = request.get_json();
+    newId = data['id']
+    date = str(data['date'])
+    meeting_time = str(data['meeting_time'])
+    attended = str(data['attended'])
+    topics = str(data['topics'])
+    todo = str(data['todo'])
+    completed = str(data['completed'])
 
     try:
         # Get and Update Meeting
-        meeting = Meeting.query().filter_by(id=id).first()
+        meeting = Meeting.query.filter_by(id=id).first()
+        if newId is not None:
+           meeting.id = newId
         meeting.date = date,
         meeting.meeting_time = meeting_time,
-        meeting.attended = str(attended),
-        meeting.topics = str(topics),
-        meeting.todo = str(todo),
-        meeting.completed = str(completed)
+        meeting.attended = attended,
+        meeting.topics = topics,
+        meeting.todo = todo,
+        meeting.completed = completed
 
         db.session.commit()
-        return "Meeting Added"
+        return "Meeting Updated"
     except Exception as e:
         return str(e)
 
 @app.route('/meetings', methods=['POST'])
 def postMeeting():
-    date = request.args.get('date')
-    meeting_time = request.args.get('meeting_time')
-    attended = request.args.get('attended')
-    topics = request.args.get('topics')
-    todo = request.args.get('todo')
-    completed = request.args.get('completed')
+    data = request.get_json();
+    date = str(data['date'])
+    meeting_time = str(data['meeting_time'])
+    attended = str(data['attended'])
+    topics = str(data['topics'])
+    todo = str(data['todo'])
+    completed = str(data['completed'])
 
     try:
         meeting= Meeting(
             date = date,
             meeting_time = meeting_time,
-            attended = str(attended),
-            topics = str(topics),
-            todo = str(todo),
-            completed = str(completed)
+            attended = attended,
+            topics = topics,
+            todo = todo,
+            completed = completed
         )
         db.session.add(meeting)
         db.session.commit()
