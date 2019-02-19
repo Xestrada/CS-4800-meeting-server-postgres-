@@ -1,13 +1,12 @@
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
-import config
 import os
 
 #Setup App
 app = Flask(__name__)
-app.config.from_object(config.DevelopmentConfig) #Should change based on is in Development or Production
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://localhost:5432/Meetings'
+app.config.from_object(os.environ['APP_SETTINGS']) #Should change based on is in Development or Production
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Enable CORS
