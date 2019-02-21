@@ -66,7 +66,7 @@ def updateMeeting(id):
 
 @app.route('/meetings', methods=['POST'])
 def postMeeting():
-    data = request.get_json();
+    data = request.get_json()
     date = str(data['date'])
     meeting_time = str(data['meeting_time'])
     attended = str(data['attended'])
@@ -92,7 +92,7 @@ def postMeeting():
 @app.route('/meetings', methods=['GET'])
 def getMeetings():
     try:
-        meetings = Meeting.query.all()
+        meetings = Meeting.query.order_by(Meeting.date).all()
         return jsonify({'meetings': [meeting.serialize() for meeting in meetings]})
     except Exception as e:
         return str(e)
